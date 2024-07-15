@@ -136,57 +136,11 @@ namespace SOS2SRTSLANDINGZONE
             Room room = (Room)typeof(RoomTempTracker)
                 .GetField("room", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(__instance);
 
-            //Added code starts
-            bool hasLandingPoint = true;
-            bool hasAnyLandingPoints = false;
-
-            List<Thing> landingPointsAtCell = new List<Thing>();
-
-            foreach (IntVec3 cell in room.Cells)
-            {
-                landingPointsAtCell =
-                    cell.GetThingList(room.Map);
-                landingPointsAtCell =
-                    cell.GetThingList(room.Map).Where(t => t.def.defName.Contains("ShipHangarTile")).ToList();
-                if (landingPointsAtCell.Count < 1)
-                {
-                    if (!cell.Roofed(room.Map))
-                    {
-                        hasLandingPoint = false;
-                        break;
-                    }
-                }
-                else
-                {
-                    hasAnyLandingPoints = true;
-                }
-                foreach (Thing thang in landingPointsAtCell)
-                {
-                    try
-                    {
-                        if (!((ThingWithComps)thang).GetComp<CompPowerTrader>().PowerOn)
-                        {
-                            hasLandingPoint = false;
-                            break;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        //Do nothing
-                    }
-                }
-            }
-
-            if (!hasAnyLandingPoints)
-            {
-                hasLandingPoint = false;
-            }
-
-            if (hasLandingPoint)
+            if (room.OpenRoofCount == 0)
             {
                 room.Temperature = 21f;
-                return;
             }
+
             //Added code ends
 
             if (room.Map.terrainGrid.TerrainAt(IntVec3.Zero).defName != "EmptySpace")
@@ -494,7 +448,21 @@ namespace SOS2SRTSLANDINGZONE
                         List<Thing> thingsAtCell = v.GetThingList(__instance.Map);
 
                         // if there is no roof and no hangar tile then the cell is really missing a roof
-                        if ((roofAt == null || roofAt != roofDef) && !thingsAtCell.Any(t => t.def.defName.Contains("ShipHangarTile")))
+                        if (roofAt == null)
+                        {
+                            Thing thing = thingsAtCell.FirstOrDefault(t => t.def.defName.Contains("ShipHangarTile"));
+
+                            if (thing != default(Thing) && thing is ThingWithComps comps)
+                            {
+                                if (comps.GetComp<CompPowerTrader>().PowerOn)
+                                {
+                                    continue;
+                                }
+                            }
+
+                            total++;
+                        }
+                        else if (roofAt != roofDef)
                         {
                             total++;
                         }
