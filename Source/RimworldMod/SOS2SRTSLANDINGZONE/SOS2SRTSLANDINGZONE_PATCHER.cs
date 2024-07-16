@@ -136,17 +136,44 @@ namespace SOS2SRTSLANDINGZONE
             Room room = (Room)typeof(RoomTempTracker)
                 .GetField("room", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(__instance);
 
-            if (room.OpenRoofCount == 0)
+            if (room.Map.IsSpace())
             {
-                room.Temperature = 21f;
-            }
+                bool foundHangarHull = false;
+                foreach (IntVec3 cell in room.Cells)
+                {
+                    List<Thing> thingsAtCell = new List<Thing>();
 
-            //Added code ends
+                    // if there is a ShipHangarTile
 
-            if (room.Map.terrainGrid.TerrainAt(IntVec3.Zero).defName != "EmptySpace")
-                return;
-            if (room.Role != RoomRoleDefOf.None && room.OpenRoofCount > 0)
-                __instance.Temperature = -100f;
+                    foreach (Thing thang in cell.GetThingList(room.Map))
+                    {
+                        if (thang.def.defName.Contains("ShipHangarTile"))
+                        {
+                            foundHangarHull = true;
+                            break;                            
+                        }
+                    }
+
+                    if (foundHangarHull)
+                    {
+                        break;
+                    }
+                }
+                
+                if (foundHangarHull && room.OpenRoofCount == 0)
+                {
+                    __instance.Temperature = 21f;
+                }
+
+
+                //Added code ends
+
+                if (room.Map.terrainGrid.TerrainAt(IntVec3.Zero).defName != "EmptySpace")
+                    return;
+                if (room.Role != RoomRoleDefOf.None && room.OpenRoofCount > 0)
+                    __instance.Temperature = -100f;
+
+            }            
         }
     }
 
