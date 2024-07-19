@@ -20,8 +20,6 @@ namespace SOS2SRTSLANDINGZONE
 
     internal class ModLoader
     {
-        public static bool SOS2ModLoaded = false;
-
         // create a list of mods that are supported by this patch, add sos2 to the list
         public static List<ModInfo> SupportedMods = new List<ModInfo>
         {
