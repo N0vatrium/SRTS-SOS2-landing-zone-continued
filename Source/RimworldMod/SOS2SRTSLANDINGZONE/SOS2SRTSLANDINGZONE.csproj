@@ -96,6 +96,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper.cs" />
+    <Compile Include="ModLoader.cs" />
+    <Compile Include="RooflessPatches.cs" />
+    <Compile Include="SRTSPatches.cs" />
     <Compile Include="SOS2SRTSLANDINGZONE_PATCHER.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
