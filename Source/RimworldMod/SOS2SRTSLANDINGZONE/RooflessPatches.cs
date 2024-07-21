@@ -10,10 +10,15 @@ using Verse;
 
 namespace SOS2SRTSLANDINGZONE
 {
-    internal class RooflessPatches
+    internal class RooflessPatches : IModPatch
     {
+        public void Patch(Harmony harmony)
+        {
+            harmony.Patch(AccessTools.PropertyGetter(typeof(Room), "OpenRoofCount"), postfix: new HarmonyMethod(typeof(RoofCountPatch), "Postfix"));
+            harmony.Patch(AccessTools.Method(typeof(WeatherEvent_VacuumDamage), "FireEvent"), prefix: new HarmonyMethod(typeof(VaccumPatch), "Prefix"));
+            harmony.Patch(AccessTools.Method(typeof(RoomTempTracker), "EqualizeTemperature"), postfix: new HarmonyMethod(typeof(VacuumTempPatch), "Postfix"));
+        }
 
-        [HarmonyPatch(typeof(Room), "OpenRoofCount", MethodType.Getter)]
         public static class RoofCountPatch
         {
             public static int Postfix(int __result, Room __instance, ref int ___cachedOpenRoofCount, bool __state)
@@ -67,7 +72,6 @@ namespace SOS2SRTSLANDINGZONE
         }
 
 
-        [HarmonyPatch(typeof(WeatherEvent_VacuumDamage), "FireEvent")]
         public static class VaccumPatch
         {
             public static HediffDef ArchoLung = HediffDef.Named("SoSArchotechLung");
@@ -169,7 +173,6 @@ namespace SOS2SRTSLANDINGZONE
         }
 
 
-        [HarmonyPatch(typeof(RoomTempTracker), "EqualizeTemperature")]
         public static class VacuumTempPatch
         {
             public static void Postfix(RoomTempTracker __instance)

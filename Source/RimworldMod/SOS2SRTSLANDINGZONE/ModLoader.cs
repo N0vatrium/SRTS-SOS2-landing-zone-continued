@@ -25,18 +25,29 @@ namespace SOS2SRTSLANDINGZONE
         {
             new ModInfo
             {
-                Name = "SRTS Expanded",
+                Name = "SRTS Expanded (local)",
                 Id = "smashphil.srtsexpanded",
+                Type = typeof(SRTSPatches)
+            },
+            new ModInfo
+            {
+                Name = "SRTS Expanded (steam)",
+                Id = "smashphil.srtsexpanded_steam",
                 Type = typeof(SRTSPatches)
             }
         };
+
+        public bool IsSOS2Activated()
+        {
+            return ModLister.AllInstalledMods.Any(m => m.Active && m.PackageId == "kentington.saveourship2");
+        }
 
         public List<ModInfo> GetSupportedMods()
         {
             List<ModInfo> supportedMods = new List<ModInfo>();
 
             List<ModMetaData> mods = ModLister.AllInstalledMods.ToList();
-            string[] ids = mods.Select(m => m.PackageId).ToArray();
+            string[] ids = SupportedMods.Select(m => m.Id).ToArray();
 
             foreach (ModMetaData mod in mods)
             {

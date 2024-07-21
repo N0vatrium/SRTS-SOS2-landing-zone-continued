@@ -9,14 +9,23 @@ namespace SOS2SRTSLANDINGZONE
     {
         static SOS2SRTSLANDINGZONE_PATCHER()
         {
+
             Helper.Log("Initiating core....");
 
+            ModLoader modLoader = new ModLoader();
+            if (!modLoader.IsSOS2Activated())
+            {
+                Helper.Log("SOS2 is not activated, aborting", true);
+
+                return;
+            }
+
             var harmony = new Harmony("rimworld.glasses.SOS2SRTSHangar");
-            harmony.PatchAll(typeof(RooflessPatches).Assembly);
+
+            new RooflessPatches().Patch(harmony);
 
             Helper.Log("Core loaded, now checking for supported mods");
 
-            ModLoader modLoader = new ModLoader();
             List<ModInfo> mods = modLoader.GetSupportedMods();
 
             foreach (ModInfo mod in mods)

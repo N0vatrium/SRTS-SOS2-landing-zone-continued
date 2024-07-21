@@ -18,6 +18,11 @@
     <displayName>HugsLib</displayName>
     <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=818773962</steamWorkshopUrl>
   </li>
+  <li>
+    <packageId>kentington.saveourship2</packageId>
+    <displayName>Save Our Ship 2</displayName>
+    <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=1909914131</steamWorkshopUrl>
+  </li>
 </modDependencies>
 <packageId>glasses.sos2srtsZone</packageId>
 <description>
